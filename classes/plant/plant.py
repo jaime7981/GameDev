@@ -63,5 +63,9 @@ class Plant(Sprite):
     def set_sunlight(self, amount):
         self.sunlight = amount
 
-    def draw(self, screen):
+    def update(self):
+        self.grow()
+        self.take_water(1)
+
+    def draw(self, screen: pygame.Surface):
         screen.blit(self.image, self.position)

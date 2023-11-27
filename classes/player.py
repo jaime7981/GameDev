@@ -1,8 +1,5 @@
 import pygame
 from pygame.sprite import Sprite
-
-import classes
-
 class Player(Sprite):
     def __init__(
             self, 
@@ -10,7 +7,7 @@ class Player(Sprite):
             speed: int = 2
         ) -> None:
 
-        Sprite.__init__()
+        Sprite.__init__(self)
 
         # Atributos player
         self.speed = speed
@@ -71,7 +68,6 @@ class Player(Sprite):
         if (self.move_down ^ self.move_up) or (self.move_right ^ self.move_left):
             for cooldown in cooldown_event[self.event]:
                 if current_time - self.last_update >= cooldown:
-                    print(current_time - self.last_update)
                     self.frame += 1
                     self.last_update = current_time
                     if self.frame >= len(self.animations[self.event][self.direction]):

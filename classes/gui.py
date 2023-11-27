@@ -22,14 +22,15 @@ class GUI():
 
         pygame.display.set_caption("Juego de Prueba")
 
-        self.background_colorcolor = BACKGROUND_COLOR
+        self.background_color = BACKGROUND_COLOR
         loaded_backgound = pygame.image.load(get_asset_resource_path('background.jpg'))
         self.background = pygame.transform.scale(loaded_backgound, (width, height))
 
         self.initialize_players()
+        self.plants = []
 
     def initialize_players(self):
-        self.player = Player()
+        self.player: Player = Player(self.screen)
 
     def draw_background(self) -> None:
         self.screen.blit(self.background, (0, 0))
@@ -89,7 +90,7 @@ class GUI():
             self.draw_plants()
 
             self.player.move()
-            self.screen.fill(self.color)
+            self.screen.fill(self.background_color)
             self.player.run()
 
             pygame.display.update()

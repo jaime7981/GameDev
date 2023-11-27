@@ -1,11 +1,22 @@
 import pygame
 from pygame.sprite import Sprite
 
+import classes
+
 class Player(Sprite):
-    def __init__(self, a_game) -> None:
-        super().__init__()
-        self.screen = a_game.screen
-        self.screen_rect = a_game.screen.get_rect()
+    def __init__(
+            self, 
+            screen: pygame.Surface = None, 
+            speed: int = 2
+        ) -> None:
+
+        Sprite.__init__()
+
+        # Atributos player
+        self.speed = speed
+
+        self.screen = screen
+        self.screen_rect = screen.get_rect()
 
         self.sprites = self.add_sprites("assets/char.png", 64, 64)
         self.animations = self.add_animation(self.sprites) # 0: walk 1: run 3: jump
@@ -29,7 +40,6 @@ class Player(Sprite):
         self.move_down = False
         self.x = float(self.rect.x)
         self.y = float(self.rect.y)
-        self.game = a_game
 
 
     def move(self):
@@ -38,19 +48,19 @@ class Player(Sprite):
 
         if self.move_left and (self.rect.left > 0):
             self.direction = 3
-            self.x -= self.game.speed_player
+            self.x -= self.speed
             self.rect.x = self.x
         if self.move_right and (self.rect.right < self.screen_rect.right):
             self.direction = 2
-            self.x += self.game.speed_player
+            self.x += self.speed
             self.rect.x = self.x
         if self.move_up and (self.rect.top > 0):
             self.direction = 1
-            self.y -= self.game.speed_player * 0.75
+            self.y -= self.speed
             self.rect.y = self.y
         if self.move_down and (self.rect.bottom < self.screen_rect.bottom):
             self.direction = 0
-            self.y += self.game.speed_player * 0.75
+            self.y += self.speed
             self.rect.y = self.y
     
     def run(self):

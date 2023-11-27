@@ -1,8 +1,11 @@
 import pygame
+from pygame.sprite import Sprite
+from assets.load_assets import get_asset_resource_path
 
-class Plant():
+class Plant(Sprite):
     def __init__(
             self, 
+            name: str = 'Default Plant',
             position: [int,int] = [0,0], 
             cost: int = 100,
             level: int = 1,
@@ -11,11 +14,18 @@ class Plant():
             max_growth: int = 100,
             health: int = 100,
             water: int = 0,
-            sunlight: int = 0
+            sunlight: int = 0,
+            image: str = get_asset_resource_path('plants/default_plant.png')
         ) -> None:
         
+        Sprite.__init__(self)
+        self.image = pygame.image.load(image)
+        self.rect = self.image.get_rect()
+
+        self.name = name
+
         self.position = position
-        self.size = [0, 0]
+        self.size = [16, 16]
         self.cost = cost
         self.level = level
 
@@ -52,3 +62,6 @@ class Plant():
 
     def set_sunlight(self, amount):
         self.sunlight = amount
+
+    def draw(self, screen):
+        screen.blit(self.image, self.position)

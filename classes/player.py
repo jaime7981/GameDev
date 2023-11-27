@@ -46,11 +46,11 @@ class Player(Sprite):
             self.rect.x = self.x
         if self.move_up and (self.rect.top > 0):
             self.direction = 1
-            self.y -= self.game.speed_player
+            self.y -= self.game.speed_player * 0.75
             self.rect.y = self.y
         if self.move_down and (self.rect.bottom < self.screen_rect.bottom):
             self.direction = 0
-            self.y += self.game.speed_player
+            self.y += self.game.speed_player * 0.75
             self.rect.y = self.y
     
     def run(self):
@@ -61,6 +61,7 @@ class Player(Sprite):
         if (self.move_down ^ self.move_up) or (self.move_right ^ self.move_left):
             for cooldown in cooldown_event[self.event]:
                 if current_time - self.last_update >= cooldown:
+                    print(current_time - self.last_update)
                     self.frame += 1
                     self.last_update = current_time
                     if self.frame >= len(self.animations[self.event][self.direction]):

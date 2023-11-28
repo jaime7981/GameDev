@@ -4,7 +4,8 @@ class Player(Sprite):
     def __init__(
             self, 
             screen: pygame.Surface = None, 
-            speed: int = 2
+            speed: int = 2,
+            level: int = 1
         ) -> None:
 
         Sprite.__init__(self)
@@ -14,9 +15,11 @@ class Player(Sprite):
 
         self.screen = screen
         self.screen_rect = screen.get_rect()
+        self.level = level
 
         self.sprites = self.add_sprites("assets/char.png", 64, 64)
         self.animations = self.add_animation(self.sprites) # 0: walk 1: run 3: jump
+
         self.walk_cooldown = (135,135,135,135,135,135)
         self.run_cooldown = (80,55,125,80,55,125)
         self.push_cooldown = (300,300)
@@ -35,6 +38,7 @@ class Player(Sprite):
         self.move_right = False
         self.move_up = False
         self.move_down = False
+
         self.x = float(self.rect.x)
         self.y = float(self.rect.y)
 
@@ -60,23 +64,22 @@ class Player(Sprite):
             self.y += self.speed
             self.rect.y = self.y
     
-    def run(self):
+    def animation(self):
         current_time = pygame.time.get_ticks()
 
         cooldown_event = [self.walk_cooldown, self.run_cooldown]
 
         if (self.move_down ^ self.move_up) or (self.move_right ^ self.move_left):
-            for cooldown in cooldown_event[self.event]:
-                if current_time - self.last_update >= cooldown:
-                    self.frame += 1
-                    self.last_update = current_time
-                    if self.frame >= len(self.animations[self.event][self.direction]):
-                        self.frame = 0
+            cooldown = cooldown_event[self.event][self.frame]
+            if current_time - self.last_update >= cooldown:
+                self.frame += 1
+                self.last_update = current_time
+                if self.frame >= len(self.animations[self.event][self.direction]):
+                    self.frame = 0
             self.image = self.animations[self.event][self.direction][self.frame]
 
+    def update(self):
         self.screen.blit(self.image, self.rect)
-
-    
     
     def add_sprites(self, url, width_sprite, high_sprite):
         image = pygame.image.load(url)

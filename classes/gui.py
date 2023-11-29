@@ -92,9 +92,8 @@ class GUI():
             self.draw_mouse_position()
             self.draw_plants()
 
-            self.player.update()
             self.screen.fill(self.background_color)
-            
+            self.player.update()
 
             pygame.display.update()
 

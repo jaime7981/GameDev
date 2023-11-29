@@ -3,11 +3,11 @@ from pygame.sprite import Sprite
 class Player(Sprite):
     def __init__(
             self, 
+            screen: pygame.Surface = None,
             name: str = 'Player',
             health: int = 100,
             speed: int = 2,
-            level: int = 1,
-            screen: pygame.Surface = None
+            level: int = 1
         ) -> None:
 
         Sprite.__init__(self)
@@ -83,7 +83,8 @@ class Player(Sprite):
                     self.frame = 0
             self.image = self.animations[self.event][self.direction][self.frame]
         
-        self.image = self.sprites[self.direction][0]
+        else:
+            self.image = self.sprites[self.direction][0]
     
     def take_damage(self, damage):
         # Método para reducir la salud del jugador

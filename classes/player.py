@@ -3,7 +3,9 @@ from pygame.sprite import Sprite
 class Player(Sprite):
     def __init__(
             self, 
-            screen: pygame.Surface = None, 
+            screen: pygame.Surface = None,
+            name: str = 'Player',
+            health: int = 100,
             speed: int = 2,
             level: int = 1
         ) -> None:
@@ -11,14 +13,20 @@ class Player(Sprite):
         Sprite.__init__(self)
 
         # Atributos player
+        self.name = name
+        self.health = health
         self.speed = speed
-
-        self.screen = screen
-        self.screen_rect = screen.get_rect()
         self.level = level
+        self.screen = screen
 
+        self.screen_rect = screen.get_rect()
+        
+        # Cargar sprites y configurar animaciones
         self.sprites = self.add_sprites("assets/char.png", 64, 64)
         self.animations = self.add_animation(self.sprites) # 0: walk 1: run 3: jump
+        self.frame = 0
+        self.event = 0 # 0: walk 1: run 2: jump ...
+        self.direction = 0 # 0: abajo 1: arriba 2: derecha 3: izquierda
 
         self.walk_cooldown = (135,135,135,135,135,135)
         self.run_cooldown = (80,55,125,80,55,125)
@@ -26,45 +34,42 @@ class Player(Sprite):
         self.pull_cooldown = (400,400)
         self.jump_cooldown = (300,150,100,300)
 
-        self.frame = 0
-        self.event = 0 # 0: walk 1: run 2: jump ...
-        self.direction = 0 # 0: abajo 1: arriba 2: derecha 3: izquierda
+        # Configuración inicial del jugador
         self.image = self.sprites[0][self.direction]
-        self.last_update = pygame.time.get_ticks()
         self.rect = self.image.get_rect()
         self.rect.midbottom = self.screen_rect.midbottom
+        self.x, self.y = float(self.rect.x), float(self.rect.y)
 
+        # Estado de movimiento
         self.move_left = False
         self.move_right = False
         self.move_up = False
         self.move_down = False
 
-        self.x = float(self.rect.x)
-        self.y = float(self.rect.y)
+        # Tiempo de la última actualización para animaciones
+        self.last_update = pygame.time.get_ticks()
 
 
     def move(self):
-
-        self.image = self.sprites[self.direction][0]
-
+        # Lógica de movimiento del jugador
         if self.move_left and (self.rect.left > 0):
             self.direction = 3
             self.x -= self.speed
-            self.rect.x = self.x
         if self.move_right and (self.rect.right < self.screen_rect.right):
             self.direction = 2
             self.x += self.speed
-            self.rect.x = self.x
         if self.move_up and (self.rect.top > 0):
             self.direction = 1
             self.y -= self.speed
-            self.rect.y = self.y
         if self.move_down and (self.rect.bottom < self.screen_rect.bottom):
             self.direction = 0
             self.y += self.speed
-            self.rect.y = self.y
+
+        # Actualizar la posición del rectángulo
+        self.rect.x, self.rect.y = self.x, self.y
     
     def animation(self):
+        # Lógica de animación
         current_time = pygame.time.get_ticks()
 
         cooldown_event = [self.walk_cooldown, self.run_cooldown]
@@ -77,8 +82,26 @@ class Player(Sprite):
                 if self.frame >= len(self.animations[self.event][self.direction]):
                     self.frame = 0
             self.image = self.animations[self.event][self.direction][self.frame]
-
+        
+        else:
+            self.image = self.sprites[self.direction][0]
+    
+    def take_damage(self, damage):
+        # Método para reducir la salud del jugador
+        self.health -= damage
+        if self.health < 0:
+            self.health = 0
+    
+    def heal(self, amount):
+        # Método para incrementar la salud del jugador
+        self.health += amount
+        if self.health > 100:
+            self.health = 100
+    
     def update(self):
+        # Lógica de actualización del jugador
+        self.move()
+        self.animation()
         self.screen.blit(self.image, self.rect)
     
     def add_sprites(self, url, width_sprite, high_sprite):

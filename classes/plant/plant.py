@@ -7,6 +7,7 @@ class Plant(Sprite):
             self, 
             name: str = 'Default Plant',
             position: [int,int] = [0,0], 
+            size: int = 32,
             cost: int = 100,
             level: int = 1,
             growth: int = 0,
@@ -19,20 +20,19 @@ class Plant(Sprite):
         ) -> None:
         
         Sprite.__init__(self)
-        self.image = pygame.image.load(image)
-        self.rect = self.image.get_rect()
-
         self.name = name
 
         self.position = position
-        self.size = [16, 16]
+        self.size = size
+
+        self.image = pygame.image.load(image)
+        self.image = pygame.transform.scale(self.image, (self.size, self.size))
+        
         self.cost = cost
         self.level = level
-
         self.growth = growth
         self.growth_rate = growth_rate
         self.max_growth = max_growth
-        
         self.health = health
         self.water = water
         self.sunlight = sunlight
@@ -63,9 +63,18 @@ class Plant(Sprite):
     def set_sunlight(self, amount):
         self.sunlight = amount
 
+    def get_plant_center(self):
+        return (
+            self.position[0] - self.size / 2, 
+            self.position[1] - self.size / 2
+        )
+
     def update(self):
         self.grow()
         self.take_water(1)
 
     def draw(self, screen: pygame.Surface):
-        screen.blit(self.image, self.position)
+        screen.blit(
+            self.image, 
+            self.get_plant_center()
+        )

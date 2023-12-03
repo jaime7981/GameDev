@@ -1,5 +1,6 @@
 import pygame
 from pygame.sprite import Sprite
+from assets.load_assets import get_asset_resource_path
 class Player(Sprite):
     def __init__(
             self, 
@@ -22,7 +23,7 @@ class Player(Sprite):
         self.screen_rect = screen.get_rect()
         
         # Cargar sprites y configurar animaciones
-        self.sprites = self.add_sprites("assets/char.png", 64, 64)
+        self.sprites = self.add_sprites(get_asset_resource_path("player/char_a_p1/char_a_p1_0bas_humn_v01.png"), 64, 64)
         self.animations = self.add_animation(self.sprites) # 0: walk 1: run 3: jump
         self.frame = 0
         self.event = 0 # 0: walk 1: run 2: jump ...

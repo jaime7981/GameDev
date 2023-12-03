@@ -23,7 +23,7 @@ class GUI():
         pygame.display.set_caption("Juego de Prueba")
 
         self.background_color = BACKGROUND_COLOR
-        loaded_backgound = pygame.image.load(get_asset_resource_path('background.jpg'))
+        loaded_backgound = pygame.image.load(get_asset_resource_path('tiles/background.png'))
         self.background = pygame.transform.scale(loaded_backgound, (width, height))
 
         self.initialize_players()
@@ -91,8 +91,6 @@ class GUI():
             self.draw_background()
             self.draw_mouse_position()
             self.draw_plants()
-
-            self.screen.fill(self.background_color)
             self.player.update()
 
             pygame.display.update()

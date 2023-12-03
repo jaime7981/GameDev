@@ -1,5 +1,8 @@
 import pygame
 from assets.load_assets import get_asset_resource_path
+from classes.map.tile import Tile
+from classes.plant.plant import Plant
+from classes.map.tile import tile_generator
 from classes.player import Player
 
 RED = (255,0,0)
@@ -27,7 +30,8 @@ class GUI():
         self.background = pygame.transform.scale(loaded_backgound, (width, height))
 
         self.initialize_players()
-        self.plants = []
+        self.plants: list(Plant) = []
+        self.tiles: list(Tile) = []
 
     def initialize_players(self):
         self.player: Player = Player(self.screen)
@@ -47,6 +51,10 @@ class GUI():
     def draw_plants(self) -> None:
         for plant in self.plants:
             plant.draw(self.screen)
+
+    def draw_tiles(self) -> None:
+        for tile in self.tiles:
+            tile.draw(self.screen)
 
 
     def check_events(self):
@@ -69,6 +77,8 @@ class GUI():
                 if event.key == pygame.K_LSHIFT:
                     self.player.event = 1
                     self.player.speed = self.player.speed * 2
+                if event.key == pygame.K_SPACE:
+                    self.plants.append(self.player.plant())
                 
             elif event.type == pygame.KEYUP:
                 if event.key == pygame.K_LEFT:
@@ -84,15 +94,18 @@ class GUI():
                     self.player.speed = self.player.speed // 2
 
     def run_game(self) -> None:
+        self.tiles = tile_generator(self.width, self.height)
+
+        print(len(self.tiles))
+
         while self.running:
             self.clock.tick(self.tick)
             self.check_events()
 
             self.draw_background()
+            self.draw_tiles()
             self.draw_mouse_position()
             self.draw_plants()
-
-            self.screen.fill(self.background_color)
             self.player.update()
 
             pygame.display.update()

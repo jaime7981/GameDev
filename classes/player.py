@@ -1,5 +1,6 @@
 import pygame
 from pygame.sprite import Sprite
+from classes.plant.plant import Plant
 class Player(Sprite):
     def __init__(
             self, 
@@ -48,6 +49,8 @@ class Player(Sprite):
 
         # Tiempo de la última actualización para animaciones
         self.last_update = pygame.time.get_ticks()
+
+        self.size = 64
 
 
     def move(self):
@@ -150,3 +153,11 @@ class Player(Sprite):
 
         return animation_list
     
+    def plant(self):
+        plant_position = [self.x + self.size/2, self.y + self.size/2]
+
+        new_plant = Plant(
+            position = plant_position
+        )
+
+        return new_plant

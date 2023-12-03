@@ -59,15 +59,16 @@ class GUI():
 
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_LEFT:
-                    self.player.direction = 0
                     self.player.move_left = True
                 if event.key == pygame.K_RIGHT:
-                    self.player.direction = 1
                     self.player.move_right = True
                 if event.key == pygame.K_UP:
                     self.player.move_up = True
                 if event.key == pygame.K_DOWN:
                     self.player.move_down = True
+                if event.key == pygame.K_LSHIFT:
+                    self.player.event = 1
+                    self.player.speed = self.player.speed * 2
                 
             elif event.type == pygame.KEYUP:
                 if event.key == pygame.K_LEFT:
@@ -78,7 +79,9 @@ class GUI():
                     self.player.move_up = False
                 if event.key == pygame.K_DOWN:
                     self.player.move_down = False
-
+                if event.key == pygame.K_LSHIFT:
+                    self.player.event = 0
+                    self.player.speed = self.player.speed // 2
 
     def run_game(self) -> None:
         while self.running:
@@ -89,9 +92,8 @@ class GUI():
             self.draw_mouse_position()
             self.draw_plants()
 
-            self.player.move()
             self.screen.fill(self.background_color)
-            self.player.run()
+            self.player.update()
 
             pygame.display.update()
 
